@@ -36,7 +36,8 @@ fi
 
 user_id=$(id -u)
 image_name=$(basename $1)
-image_plus_tag=$image_name:latest
+revision=$(git describe --tags --long)
+image_plus_tag=kumarrobotics/$image_name:$revision
 
 docker build --rm -t $image_plus_tag --build-arg user_id=$user_id $DIR/$image_name
 
