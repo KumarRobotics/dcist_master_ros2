@@ -46,7 +46,7 @@ RUN add-apt-repository -y ppa:neovim-ppa/stable \
 
 # Add a user with the same user_id as the user outside the container
 # Requires a docker build argument `user_id`
-ARG user_id
+ARG user_id=1000
 env USER dcist
 RUN useradd -U --uid ${user_id} -ms /bin/bash $USER \
  && echo "$USER:$USER" | chpasswd \
