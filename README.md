@@ -10,6 +10,8 @@ TL;DR:
  - It copies the `ws` jackal workspace and builds it.
  - It provides helper scripts `build.bash`, `run.bash` and `join.bash`
 
+**Important: Only tagged versions are pushed as the `latest` image.**
+
 ### How to use?
 ```
 docker pull kumarrobotics/jackal-master:latest
