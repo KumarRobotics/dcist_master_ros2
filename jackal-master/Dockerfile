@@ -154,5 +154,5 @@ RUN /bin/sh -c 'echo ". /opt/ros/noetic/setup.bash" >> ~/.bashrc' \
 COPY --chown=$USER:$USER ../ws /home/$USER/jackal_ws
 RUN cd ~/jackal_ws \
  && catkin config --extend /opt/ros/noetic \
- && catkin build
+ && catkin build --no-status -DCMAKE_BUILD_TYPE=Release
 
