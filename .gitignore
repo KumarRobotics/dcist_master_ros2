@@ -1,4 +1,6 @@
-ws/devel/*
-ws/logs/*
-ws/build/*
+user_ws/devel
+user_ws/logs
+user_ws/build
+user_ws/src
+user_ws/.catkin_tools
 ws/.catkin_tools
