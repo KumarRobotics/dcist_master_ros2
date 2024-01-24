@@ -53,7 +53,7 @@ then
 fi
 
 # Build the image
-docker build --rm -t $image_plus_tag --build-arg user_id=$user_id $DIR/$image_name
+docker build --rm -t $image_plus_tag --build-arg user_id=$user_id -f $DIR/$image_name/Dockerfile .
 echo "Built $image_plus_tag and tagged as $image_name:latest"
 
 # Create "latest" tag

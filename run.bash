@@ -39,7 +39,6 @@ IMG="kumarrobotics/$(basename $1)"
 
 # Get the current folder for the docker run command
 CURR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-JACKAL_WS="$CURR_DIR/ws"
 USER_WS="$CURR_DIR/user_ws"
 DATA_DIR="$CURR_DIR/data"
 ROS_DIR="$CURR_DIR/.ros_docker"
@@ -61,7 +60,6 @@ chmod a+r $XAUTH
 
 # Print in purple
 echo -e "\033[1;35mRUNNING DOCKER IMAGE: $1\033[0m"
-echo -e "\033[1;35mWORKSPACE: \033[0m$JACKAL_WS"
 echo -e "\033[1;35mUSER WORKSPACE: \033[0m$USER_WS"
 echo -e "\033[1;35mDATA DIR: \033[0m$DATA_DIR"
 echo -e "\033[1;35mROS DIR: \033[0m$ROS_DIR"
@@ -86,7 +84,6 @@ docker run --gpus all \
   -h jackal \
   --add-host jackal:127.0.0.1 \
   --add-host jackal:192.168.8.100 \
-  -v "$JACKAL_WS:/home/dcist/jackal_ws" \
   -v "$USER_WS:/home/dcist/user_ws" \
   -v "$DATA_DIR:/home/dcist/data" \
   -v "$ROS_DIR:/home/dcist/.ros" \
