@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-
+#
+#
+# KumarRobotics Jackal Master based on Open Robotics Image
+#
+# * * * *
 #
 # Copyright (C) 2018 Open Source Robotics Foundation
 #
@@ -14,16 +18,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-#
 
-# Runs a docker container with the image created by build.bash
-# Requires:
-#   docker
-#   nvidia-docker
-#   an X server
-# Recommended:
-#   A joystick mounted to /dev/input/js0 or /dev/input/js1
+set -eo pipefail
+
+# Check that the current user has UID 1000.
+if [ $(id -u) -ne 1000 ]
+then
+  echo "ERROR: This script must be run with UID and GID of 1000."
+  echo "       Current UID: $(id -u), current GID: $(id -g)"
+  exit 1
+fi
 
 if [ $# -lt 1 ]
 then
@@ -31,60 +35,40 @@ then
     exit 1
 fi
 
-IMG=$(basename $1)
+IMG="kumarrobotics/$(basename $1)"
 
-ARGS=("$@")
-WORKSPACES=("${ARGS[@]:1}")
+# Get the current folder for the docker run command
+CURR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+JACKAL_WS="$CURR_DIR/ws"
+USER_WS="$CURR_DIR/user_ws"
+DATA_DIR="$CURR_DIR/data"
+ROS_DIR="$CURR_DIR/.ros_docker"
+TMUX_CONF="$CURR_DIR/tmux.conf"
+BASHRC_HOST="$CURR_DIR/bashrc"
 
 # Make sure processes in the container can connect to the x server
-# Necessary so gazebo can create a context for OpenGL rendering (even headless)
 XAUTH=/tmp/.docker.xauth
 if [ ! -f $XAUTH ]
 then
-    xauth_list=$(xauth nlist :0 | sed -e 's/^..../ffff/')
-    if [ ! -z "$xauth_list" ]
-    then
-        echo $xauth_list | xauth -f $XAUTH nmerge -
-    else
-        touch $XAUTH
-    fi
-    chmod a+r $XAUTH
+    touch $XAUTH
 fi
-
-DOCKER_OPTS=
-
-# Share your vim settings.
-VIMRC=~/.vimrc
-if [ -f $VIMRC ]
+xauth_list=$(xauth nlist :0 | sed -e 's/^..../ffff/')
+if [ -n "$xauth_list" ]
 then
-  DOCKER_OPTS="$DOCKER_OPTS -v $VIMRC:/home/developer/.vimrc:ro"
+  echo "$xauth_list" | xauth -f $XAUTH nmerge -
 fi
+chmod a+r $XAUTH
 
-for WS_DIR in ${WORKSPACES[@]}
-do
-  WS_DIRNAME=$(basename $WS_DIR)
-  if [ ! -d $WS_DIR/src ]
-  then
-    echo "Other! $WS_DIR"
-    DOCKER_OPTS="$DOCKER_OPTS -v $WS_DIR:/home/developer/other/$WS_DIRNAME"
-  else
-    echo "Workspace! $WS_DIR"
-    DOCKER_OPTS="$DOCKER_OPTS -v $WS_DIR:/home/developer/workspaces/$WS_DIRNAME"
-  fi
-done
-
-echo "RUNNING DOCKER IMAGE: " $1
-
-# docker folder should contain a WORKSPACE.txt that contains a path (relative to $SUBT_ROOT_WS) to a folder to be mounted into docker container
-# This path is saved as the variable $WORKSPACE_DIR
-# $SUBT_ROOT_WS is an environment variable on your own computer that must be set that points to the root directory of this git package
-source $1/WORKSPACE.txt
-echo $WORKSPACE_DIR
+# Print in purple
+echo -e "\033[1;35mRUNNING DOCKER IMAGE: $1\033[0m"
+echo -e "\033[1;35mWORKSPACE: \033[0m$JACKAL_WS"
+echo -e "\033[1;35mUSER WORKSPACE: \033[0m$USER_WS"
+echo -e "\033[1;35mDATA DIR: \033[0m$DATA_DIR"
+echo -e "\033[1;35mROS DIR: \033[0m$ROS_DIR"
+echo -e "\033[1;35mTMUX CONF: \033[0m$TMUX_CONF"
+echo -e "\033[1;35mBASHRC_HOST: \033[0m$BASHRC_HOST"
 
 # Mount extra volumes if needed.
-# E.g.:
-# -v "/opt/sublime_text:/opt/sublime_text" \
-
 docker run --gpus all \
   -u 1000 \
   -it \
@@ -97,19 +81,18 @@ docker run --gpus all \
   -v "/etc/localtime:/etc/localtime:ro" \
   -v "/dev:/dev" \
   -v "/media/$USER:/media/dcist" \
+  -v "/home/$USER/.bash_history:/home/dcist/.bash_history" \
   --network host \
   -h jackal \
   --add-host jackal:127.0.0.1 \
   --add-host jackal:192.168.8.100 \
-  -v "/home/$USER/Docker/jackal_master2/ws:/home/dcist/jackal_ws" \
-  -v "/home/$USER/Docker/user_ws2:/home/dcist/user_ws" \
-  -v "/home/$USER/Docker/data:/home/dcist/data" \
-  -v "/home/$USER/.ros_docker:/home/dcist/.ros" \
-  -v "/home/$USER/Docker/jackal_master2/jackal2/tmux.conf:/home/dcist/.tmux.conf" \
-  -v "/home/$USER/.bash_history:/home/dcist/.bash_history" \
-  -v "/home/$USER/Docker/jackal_master2/jackal2/bashrc:/home/dcist/.bashrc_host" \
+  -v "$JACKAL_WS:/home/dcist/jackal_ws" \
+  -v "$USER_WS:/home/dcist/user_ws" \
+  -v "$DATA_DIR:/home/dcist/data" \
+  -v "$ROS_DIR:/home/dcist/.ros" \
+  -v "$TMUX_CONF:/home/dcist/.tmux.conf" \
+  -v "$BASHRC_HOST:/home/dcist/.bashrc_host" \
   --rm \
   --security-opt seccomp=unconfined \
   --group-add=dialout \
-  $DOCKER_OPTS \
-  $IMG
+  "$IMG"
