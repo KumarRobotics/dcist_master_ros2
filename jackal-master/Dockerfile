@@ -128,13 +128,13 @@ RUN cd ~/cpp_deps \
   && cd benchmark && cmake -E make_directory "build" \
   && cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ \
   && sudo cmake --build "build" --config Release --target install
-# RUN cd ~/cpp_deps \
-#   && git clone --recursive https://github.com/stevenlovegrove/Pangolin.git \
-#   &&  cd Pangolin \
-#   && ./scripts/install_prerequisites.sh recommended \
-#   && cmake -B build \
-#   && cmake --build build \
-#   && sudo cmake --build install
+RUN cd ~/cpp_deps \
+  && git clone --recursive https://github.com/stevenlovegrove/Pangolin.git \
+  && cd Pangolin \
+  && git checkout v0.9.1 \
+  && sudo apt install -y $(./scripts/install_prerequisites.sh required --list) \
+  && cmake -B build \
+  && sudo cmake --build build --config Release --target install
 
 # Clone all the gazebo models so that you don't download them every time
 # docker is run
