@@ -150,9 +150,9 @@ RUN /bin/sh -c 'echo ". /opt/ros/noetic/setup.bash" >> ~/.bashrc' \
  && /bin/sh -c 'echo ". /usr/share/gazebo/setup.sh" >> ~/.bashrc' \
  && /bin/sh -c 'echo "source ~/user_ws/devel/setup.bash" >> ~/.bashrc'
 
-# Copy the jackal_ws environment and build it
-COPY --chown=$USER:$USER ../ws /home/$USER/jackal_ws
-RUN cd ~/jackal_ws \
+# Copy the dcist_ws environment and build it
+COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
+RUN cd ~/dcist_ws \
  && catkin config --extend /opt/ros/noetic \
  && catkin build --no-status -DCMAKE_BUILD_TYPE=Release
 

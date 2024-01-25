@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# KumarRobotics Jackal Master based on Open Robotics Image
+# KumarRobotics DCIST Master based on Open Robotics Image
 #
 # * * * *
 #

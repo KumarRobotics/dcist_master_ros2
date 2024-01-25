@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 #
-# KumarRobotics Jackal Master based on Open Robotics Image
+# KumarRobotics DCIST Master Image based on Open Robotics Image
 #
 # * * * *
 #
@@ -81,9 +81,9 @@ docker run --gpus all \
   -v "/media/$USER:/media/dcist" \
   -v "/home/$USER/.bash_history:/home/dcist/.bash_history" \
   --network host \
-  -h jackal \
-  --add-host jackal:127.0.0.1 \
-  --add-host jackal:192.168.8.100 \
+  -h dcist \
+  --add-host dcist:127.0.0.1 \
+  --add-host dcist:192.168.8.100 \
   -v "$USER_WS:/home/dcist/user_ws" \
   -v "$DATA_DIR:/home/dcist/data" \
   -v "$ROS_DIR:/home/dcist/.ros" \
