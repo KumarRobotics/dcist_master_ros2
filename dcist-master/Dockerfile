@@ -99,6 +99,9 @@ RUN sudo apt-get install -y \
     ros-noetic-mavros-msgs \
     ros-noetic-mavros
 
+# Install geographiclib_datasets required by mavros
+RUN cd /opt/ros/noetic/lib/mavros/ && sudo ./install_geographiclib_datasets.sh
+
 # Install pytorch
 RUN sudo sh -c 'pip3 install torch==1.8.2+cu111 torchvision==0.9.2+cu111 torchaudio==0.8.2 -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html'
 
@@ -146,26 +149,6 @@ RUN cd ~/cpp_deps \
   && cmake -B build \
   && sudo cmake --build build --config Release --target install
 
-# Clone all the gazebo models so that you don't download them every time
-# docker is run
-RUN mkdir -p /home/$USER/.gazebo && git clone https://github.com/osrf/gazebo_models /home/$USER/.gazebo/models
-
-# When running a container start in the developer's home folder
-WORKDIR /home/$USER
-
-RUN echo 'export PS1="\[$(tput setaf 2; tput bold)\]\u\[$(tput setaf 7)\]@\[$(tput setaf 3)\]\h\[$(tput setaf 7)\]:\[$(tput setaf 4)\]\W\[$(tput setaf 7)\]$ \[$(tput sgr0)\]"' >> ~/.bashrc
-RUN echo 'source ~/.bashrc_host' >> ~/.bashrc
-
-RUN /bin/sh -c 'echo ". /opt/ros/noetic/setup.bash" >> ~/.bashrc' \
- && /bin/sh -c 'echo ". /usr/share/gazebo/setup.sh" >> ~/.bashrc' \
- && /bin/sh -c 'echo "source ~/user_ws/devel/setup.bash" >> ~/.bashrc'
-
-# Copy the dcist_ws environment and build it
-COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
-RUN cd ~/dcist_ws \
- && catkin config --extend /opt/ros/noetic \
- && catkin build --no-status -DCMAKE_BUILD_TYPE=Release
-
 # Build Ian's ORBSLAM3 version with a few patches (thanks Varun)
 RUN mkdir ~/Repos && cd ~/Repos \
  && git clone https://github.com/iandouglas96/ORB_SLAM3.git && cd ORB_SLAM3 \
@@ -182,8 +165,31 @@ RUN mkdir ~/Repos && cd ~/Repos \
  && sed -i '23 i #include<iostream>' include/GeometricTools.h \
  && sed -i '126 i -lfmt' CMakeLists.txt \
  && chmod +x build.sh && ./build.sh
-RUN cd Repos/ORB_SLAM3/Vocabulary/ && tar xf ORBvoc.txt.tar.gz
+RUN cd ~/Repos/ORB_SLAM3/Vocabulary/ && tar xf ORBvoc.txt.tar.gz
 
-# Install geographiclib_datasets required by mavros
-RUN cd /opt/ros/noetic/lib/mavros/ && sudo ./install_geographiclib_datasets.sh
+# Clone all the gazebo models so that you don't download them every time
+# docker is run
+RUN mkdir -p /home/$USER/.gazebo && git clone https://github.com/osrf/gazebo_models /home/$USER/.gazebo/models
 
+# When running a container start in the developer's home folder
+WORKDIR /home/$USER
+
+# Configure .bashrc
+RUN echo 'export PS1="\[$(tput setaf 2; tput bold)\]\u\[$(tput setaf 7)\]@\[$(tput setaf 3)\]\h\[$(tput setaf 7)\]:\[$(tput setaf 4)\]\W\[$(tput setaf 7)\]$ \[$(tput sgr0)\]"' >> ~/.bashrc
+RUN echo 'source ~/.bashrc_host' >> ~/.bashrc
+
+# Fix permissions of mounted folders
+RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/user_ws >> ~/.bashrc'
+RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/data >> ~/.bashrc'
+RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/.ros >> ~/.bashrc'
+
+# Source ROS repositories
+RUN /bin/sh -c 'echo ". /opt/ros/noetic/setup.bash" >> ~/.bashrc' \
+ && /bin/sh -c 'echo ". /usr/share/gazebo/setup.sh" >> ~/.bashrc' \
+ && /bin/sh -c 'echo "source ~/user_ws/devel/setup.bash" >> ~/.bashrc'
+
+# Copy the dcist_ws environment and build it
+COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
+RUN cd ~/dcist_ws \
+ && catkin config --extend /opt/ros/noetic \
+ && catkin build --no-status -DCMAKE_BUILD_TYPE=Release
