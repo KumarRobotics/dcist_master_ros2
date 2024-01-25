@@ -18,6 +18,8 @@ RUN apt-get update \
         cppcheck \
         gdb \
         git \
+        libeigen3-dev \
+        g++ \
         libbluetooth-dev \
         libcwiid-dev \
         libgoogle-glog-dev \
@@ -37,6 +39,9 @@ RUN apt-get update \
         geany \
         tmux \
         dbus-x11 \
+        iputils-ping \
+        default-jre \
+        iproute2 \
  && apt-get clean
 
 # Install a good neovim version
@@ -90,10 +95,15 @@ RUN sudo apt-get install -y \
     ros-noetic-octomap \
     ros-noetic-pcl-ros \
     ros-noetic-octomap-msgs \
-    ros-noetic-vision-msgs
+    ros-noetic-vision-msgs \
+    ros-noetic-mavros-msgs \
+    ros-noetic-mavros
 
 # Install pytorch
 RUN sudo sh -c 'pip3 install torch==1.8.2+cu111 torchvision==0.9.2+cu111 torchaudio==0.8.2 -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html'
+
+# Install dependencies for MOCHA
+RUN sudo sh -c 'pip3 install zmq rospkg defusedxml utm'
 
 # Install all dependencies for ROFL. Based on the ROFL build action
 # https://github.com/versatran01/rofl-beta/blob/main/.github/workflows/build.yaml
@@ -172,3 +182,8 @@ RUN mkdir ~/Repos && cd ~/Repos \
  && sed -i '23 i #include<iostream>' include/GeometricTools.h \
  && sed -i '126 i -lfmt' CMakeLists.txt \
  && chmod +x build.sh && ./build.sh
+RUN cd Repos/ORB_SLAM3/Vocabulary/ && tar xf ORBvoc.txt.tar.gz
+
+# Install geographiclib_datasets required by mavros
+RUN cd /opt/ros/noetic/lib/mavros/ && sudo ./install_geographiclib_datasets.sh
+
