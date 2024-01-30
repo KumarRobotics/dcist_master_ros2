@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.3.1-devel-ubuntu20.04
+FROM nvcr.io/nvidia/cuda:11.3.1-devel-ubuntu20.04
 
 #Run the frontend first so it doesn't throw an error later
 RUN apt-get update \
