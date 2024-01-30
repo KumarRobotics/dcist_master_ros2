@@ -1,9 +1,9 @@
-name: docker-build-base
+name: docker-build-x86
 
 # Only build base when any of the files in the base directory are modified
 on:
   push:
-    branches: [master]
+    branches: [master, build_jetson]
     tags:
       - '*'
   workflow_dispatch:
