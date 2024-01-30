@@ -20,6 +20,9 @@
 
 set -eo pipefail
 
+UPSTREAM_X86_64="nvcr.io/nvidia/cuda:11.4.3-devel-ubuntu20.04"
+UPSTREAM_AARCH64="nvcr.io/nvidia/l4t-cuda:11.4.19-devel"
+
 # Check that the current user has UID 1000.
 if [ $(id -u) -ne 1000 ]
 then
@@ -32,6 +35,28 @@ if [ $# -eq 0 ]
 then
     echo "Usage: $0 directory-name"
     exit 1
+elif [ $# -eq 1 ]
+then
+  # No image type is provided, build x86 by default
+  upstream=$UPSTREAM_X86_64
+  architecture="x86_64"
+elif [ $# -eq 2 ]
+then
+  # The second argument should be x86_64 or aarch64
+  if [ "$2" = "x86_64" ]
+  then
+    upstream=$UPSTREAM_X86_64
+  elif [ "$2" = "aarch64" ]
+  then
+    upstream=$UPSTREAM_AARCH64
+  else
+    echo "Usage: $0 directory-name [x86_64|aarch64]"
+    exit 1
+  fi
+  architecture=$2
+else
+  echo "Usage: $0 directory-name [x86_64|aarch64]"
+  exit 1
 fi
 
 # Create the image name and tag
@@ -41,19 +66,24 @@ revision=$(git describe --tags --long)
 image_plus_tag=kumarrobotics/$image_name:$revision
 
 # Print image name in purple
-echo -e "\033[0;35mBuilding $image_plus_tag\033[0m"
+echo -e "\033[0;35mBuilding $image_plus_tag"
+echo -e "Architecture: $architecture"
+echo -e "Upstream image: $upstream\n\033[0m"
 
 # get path to current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-if [ ! -d $DIR/$1 ]
+if [ ! -d "$DIR/$1" ]
 then
   echo "image-name must be a directory in the same folder as this script"
   exit 2
 fi
 
 # Build the image
-docker build --rm -t $image_plus_tag --build-arg user_id=$user_id -f $DIR/$image_name/Dockerfile .
+docker build --rm -t $image_plus_tag \
+  --build-arg user_id=$user_id \
+  --build-arg upstream_image=$upstream \
+  -f $DIR/$image_name/Dockerfile .
 echo "Built $image_plus_tag and tagged as $image_name:latest"
 
 # Create "latest" tag

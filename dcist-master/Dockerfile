@@ -1,4 +1,5 @@
-FROM nvcr.io/nvidia/cuda:11.3.1-devel-ubuntu20.04
+ARG upstream_image
+FROM $upstream_image
 
 #Run the frontend first so it doesn't throw an error later
 RUN apt-get update \

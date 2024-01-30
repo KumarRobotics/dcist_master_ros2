@@ -49,6 +49,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/amd64
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: upstream_image=nvcr.io/nvidia/cuda:11.4.3-devel-ubuntu20.04
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
