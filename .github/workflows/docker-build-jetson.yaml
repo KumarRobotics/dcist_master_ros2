@@ -49,7 +49,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: upstream_image=nvcr.io/nvidia/l4t-cuda:11.4.19-devel
+          build-args: upstream_image=nvcr.io/nvidia/l4t-pytorch:r35.1.0-pth1.13-py3
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

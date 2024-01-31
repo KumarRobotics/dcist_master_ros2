@@ -1,3 +1,5 @@
+# The upstream image depends on the architecture, and it is defined when
+# building the image. Please see build.bash for more details
 ARG upstream_image
 FROM $upstream_image
 
@@ -69,6 +71,9 @@ ENV LANGUAGE en_US:en
 # Commands below run as the developer user
 USER $USER
 
+# Remove all opencv packages installed by default
+RUN sudo apt-get purge -y '*opencv*'
+
 # Install ROS Noetic
 RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \ && sudo /bin/sh -c 'curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -' \
  && sudo apt-get update \
@@ -103,8 +108,8 @@ RUN sudo apt-get install -y \
 # Install geographiclib_datasets required by mavros
 RUN cd /opt/ros/noetic/lib/mavros/ && sudo ./install_geographiclib_datasets.sh
 
-# Install pytorch
-RUN sudo sh -c 'pip3 install torch==1.8.2+cu111 torchvision==0.9.2+cu111 torchaudio==0.8.2 -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html'
+# Install pytorch only if it is not installed (avoid re-installing in Jetson)
+RUN sudo sh -c 'pip3 freeze | grep torch || pip3 install torch==1.8.2+cu111 torchvision==0.9.2+cu111 torchaudio==0.8.2 -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html'
 
 # Install dependencies for MOCHA
 RUN sudo sh -c 'pip3 install zmq rospkg defusedxml utm'
