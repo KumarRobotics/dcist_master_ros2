@@ -23,8 +23,10 @@ set -eo pipefail
 # Upstream images for x86_64 and aarch64
 # For x86_64, use the CUDA 11.4.3 image
 # For aarch64, use the L4T PyTorch image
-UPSTREAM_X86_64="nvcr.io/nvidia/cuda:11.4.3-devel-ubuntu20.04"
-UPSTREAM_AARCH64="nvcr.io/nvidia/l4t-pytorch:r35.1.0-pth1.13-py3"
+# Important: do not modify the variable name as it is used by the Github action
+# to build the image
+UPSTREAM_X86_64=nvcr.io/nvidia/cuda:11.4.3-devel-ubuntu20.04
+UPSTREAM_AARCH64=nvcr.io/nvidia/l4t-pytorch:r35.1.0-pth1.13-py3
 
 # Check that the current user has UID 1000.
 if [ $(id -u) -ne 1000 ]
