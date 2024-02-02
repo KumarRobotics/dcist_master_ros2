@@ -1,5 +1,6 @@
 DCIST Master
 =============
+![Docker CI Build](https://github.com/KumarRobotics/dcist_master/actions/workflows/docker-build.yaml/badge.svg?branch=master)
 
 This is the base image used for the DCIST robots at KR, including the Jackals
 and the high-altitude UAV. Images are automatically built and
