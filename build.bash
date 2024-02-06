@@ -20,16 +20,19 @@
 
 set -eo pipefail
 
-# Upstream images for x86_64 and aarch64
-# For x86_64, use the CUDA 11.4.3 image
-# For aarch64, use the L4T PyTorch image
+# Upstream images for x86_64 and arm64, for both Nvidia and non-Nvidia
+# For x86_64 and arm64 non-Nvidia, use the Ubuntu 20.04 image
+# For x86_64 Nvidia, use the CUDA 11.4.3 image
+# For arm64 Nvidia, use the L4T PyTorch image
 # Important: do not modify the variable name as it is used by the Github action
 # to build the image
-UPSTREAM_X86_64=nvcr.io/nvidia/cuda:11.4.3-devel-ubuntu20.04
-UPSTREAM_AARCH64=nvcr.io/nvidia/l4t-pytorch:r35.1.0-pth1.13-py3
+UPSTREAM_X86_64_NVDA=nvcr.io/nvidia/cuda:11.4.3-devel-ubuntu20.04
+UPSTREAM_ARM64_NVDA=nvcr.io/nvidia/l4t-pytorch:r35.1.0-pth1.13-py3
+UPSTREAM_X86_64_BARE=ubuntu:20.04
+UPSTREAM_ARM64_BARE=ubuntu:20.04
 
 # Check that the current user has UID 1000.
-if [ $(id -u) -ne 1000 ]
+if [ "$(id -u)" -ne 1000 ]
 then
   echo "ERROR: This script must be run with UID and GID of 1000."
   echo "       Current UID: $(id -u), current GID: $(id -g)"
@@ -43,36 +46,51 @@ then
 elif [ $# -eq 1 ]
 then
   # No image type is provided, build x86 by default
-  upstream=$UPSTREAM_X86_64
+  echo "Building x86_64 image by default"
+  upstream=$UPSTREAM_X86_64_BARE
   architecture="x86_64"
+  bare_or_nvda="bare"
 elif [ $# -eq 2 ]
 then
-  # The second argument should be x86_64 or aarch64
+  # The second argument should be x86_64_nvda arm64_nvda or x86_64
   if [ "$2" = "x86_64" ]
   then
-    upstream=$UPSTREAM_X86_64
-  elif [ "$2" = "aarch64" ]
+    upstream=$UPSTREAM_X86_64_BARE
+    bare_or_nvda="bare"
+    architecture="x86_64"
+  elif [ "$2" = "x86_64_nvda" ]
   then
-    upstream=$UPSTREAM_AARCH64
+    upstream=$UPSTREAM_X86_64_NVDA
+    bare_or_nvda="nvda"
+    architecture="x86_64"
+  elif [ "$2" = "arm64" ]
+  then
+    echo "Architecture not supported"
+    exit 1
+  elif [ "$2" = "arm64_nvda" ]
+  then
+    upstream=$UPSTREAM_ARM64_NVDA
+    bare_or_nvda="nvda"
+    achitecture="amd64"
   else
-    echo "Usage: $0 directory-name [x86_64|aarch64]"
+    echo "Usage: $0 directory-name [x86_64|x86_64_nvda|arm64_nvda]"
     exit 1
   fi
-  architecture=$2
 else
-  echo "Usage: $0 directory-name [x86_64|aarch64]"
+  echo "Usage: $0 directory-name [x86_64|x86_64_nvda|arm64_nvda]"
   exit 1
 fi
 
 # Create the image name and tag
 user_id=$(id -u)
-image_name=$(basename "$1")
+image_name="$(basename "$1")-$bare_or_nvda"
 revision=$(git describe --tags --long)
 image_plus_tag=kumarrobotics/$image_name:$revision
 
 # Print image name in purple
 echo -e "\033[0;35mBuilding $image_plus_tag"
 echo -e "Architecture: $architecture"
+echo -e "Bare or NVDA: $bare_or_nvda"
 echo -e "Upstream image: $upstream\n\033[0m"
 
 # get path to current directory
@@ -87,8 +105,10 @@ fi
 # Build the image
 docker build --rm -t $image_plus_tag \
   --build-arg user_id=$user_id \
-  --build-arg upstream_image=$upstream \
-  -f $DIR/$image_name/Dockerfile .
+  --build-arg UPSTREAM_IMAGE=$upstream \
+  --build-arg ARCHITECTURE=$architecture \
+  --build-arg BARE_OR_NVDA=$bare_or_nvda \
+  -f $DIR/$1/Dockerfile .
 echo "Built $image_plus_tag and tagged as $image_name:latest"
 
 # Create "latest" tag
