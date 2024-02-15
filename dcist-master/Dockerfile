@@ -1,7 +1,9 @@
 # The upstream image depends on the architecture, and it is defined when
 # building the image. Please see build.bash for more details
-ARG upstream_image
-FROM $upstream_image
+ARG UPSTREAM_IMAGE
+FROM $UPSTREAM_IMAGE
+ARG ARCHITECTURE
+ARG BARE_OR_NVDA
 
 #Run the frontend first so it doesn't throw an error later
 RUN apt-get update \
@@ -108,8 +110,20 @@ RUN sudo apt-get install -y \
 # Install geographiclib_datasets required by mavros
 RUN cd /opt/ros/noetic/lib/mavros/ && sudo ./install_geographiclib_datasets.sh
 
-# Install pytorch only if it is not installed (avoid re-installing in Jetson)
-RUN sudo sh -c 'pip3 freeze | grep torch || pip3 install torch==1.8.2+cu111 torchvision==0.9.2+cu111 torchaudio==0.8.2 -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html'
+# Install pytorch for the appropriate architecture
+RUN if [ "$BARE_OR_NVDA" = "nvda" ] ; then \
+  if [ "$ARCHITECTURE" = "linux/amd64" ] ; then \
+    echo "nvda - x86_64"; sudo pip3 install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu111 ; \
+  else \
+    echo "nvda - arm64" ; echo "Skipping pytorch installation for Jetson"; \
+  fi; \
+else \
+  if [ "$ARCHITECTURE" = "linux/amd64" ] ; then \
+    echo "bare - x86_64"; sudo pip3 install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cpu ; \
+  else \
+    echo "Architecture not supported"; exit 1; \
+  fi; \
+fi;
 
 # Install dependencies for MOCHA
 RUN sudo sh -c 'pip3 install zmq rospkg defusedxml utm'
