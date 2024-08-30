@@ -170,6 +170,24 @@ RUN cd ~/cpp_deps \
   && cmake -B build \
   && sudo cmake --build build --config Release --target install
 
+# Build Ian's ORBSLAM3 version with a few patches (thanks Varun) - Currently has build issues
+# RUN mkdir ~/Repos && cd ~/Repos \
+#   && git clone https://github.com/iandouglas96/ORB_SLAM3.git && cd ORB_SLAM3 \
+#   && rm -rf Thirdparty/Sophus \
+#   && sed -i '/${PROJECT_SOURCE_DIR}\/Thirdparty\/Sophus/c\#${PROJECT_SOURCE_DIR}\/Thirdparty\/Sophus' CMakeLists.txt \
+#   && sed -i '/#include "Thirdparty\/Sophus\/sophus\/geometry.hpp"/c\#include "sophus\/geometry.hpp"' include/Frame.h \
+#   && sed -i '/#include "Thirdparty\/Sophus\/sophus\/geometry.hpp"/c\#include "sophus\/geometry.hpp"' include/Converter.h \
+#   && sed -i '/#include "Thirdparty\/Sophus\/sophus\/sim3.hpp"/c\#include "sophus\/sim3.hpp"' include/Converter.h \
+#   && sed -i '/find_package(OpenCV 3)/c\find_package(OpenCV 4)' CMakeLists.txt \
+#   && sed -i '/CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)/c\CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)' CMakeLists.txt \
+#   && sed -i '/if(COMPILER_SUPPORTS_CXX11)/c\if(COMPILER_SUPPORTS_CXX14)' CMakeLists.txt \
+#   && sed -i '/set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")/c\set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")' CMakeLists.txt \
+#   && sed -i '23 i #include<iostream>' include/ImuTypes.h \
+#   && sed -i '23 i #include<iostream>' include/GeometricTools.h \
+#   && sed -i '126 i -lfmt' CMakeLists.txt \
+#   && chmod +x build.sh && ./build.sh
+# RUN cd ~/Repos/ORB_SLAM3/Vocabulary/ && tar xf ORBvoc.txt.tar.gz
+
 # Clone all the gazebo models so that you don't download them every time
 # docker is run
 RUN mkdir -p /home/$USER/.gazebo && git clone https://github.com/osrf/gazebo_models /home/$USER/.gazebo/models
