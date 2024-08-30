@@ -17,19 +17,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 set -eo pipefail
 
 # Upstream images for x86_64 and arm64, for both Nvidia and non-Nvidia
-# For x86_64 and arm64 non-Nvidia, use the Ubuntu 20.04 image
-# For x86_64 Nvidia, use the CUDA 11.4.3 image
+# For x86_64 and arm64 non-Nvidia, use the Ubuntu 24.04 image
+# For x86_64 Nvidia, use the CUDA 12.6.0 image
 # For arm64 Nvidia, use the L4T PyTorch image
 # Important: do not modify the variable name as it is used by the Github action
 # to build the image
-UPSTREAM_X86_64_NVDA=nvcr.io/nvidia/cuda:11.4.3-devel-ubuntu20.04
-UPSTREAM_ARM64_NVDA=nvcr.io/nvidia/l4t-pytorch:r35.1.0-pth1.13-py3
-UPSTREAM_X86_64_BARE=ubuntu:20.04
-UPSTREAM_ARM64_BARE=ubuntu:20.04
+UPSTREAM_X86_64_NVDA=nvcr.io/nvidia/cuda:12.6.0-devel-ubuntu24.04
+UPSTREAM_ARM64_NVDA=nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3
+UPSTREAM_X86_64_BARE=ubuntu:24.04
+UPSTREAM_ARM64_BARE=ubuntu:24.04
 
 # Check that the current user has UID 1000.
 if [ "$(id -u)" -ne 1000 ]
