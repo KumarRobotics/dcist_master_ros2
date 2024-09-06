@@ -1,7 +1,7 @@
-user_ws/devel
-user_ws/logs
-user_ws/build
-user_ws/src
-user_ws/.catkin_tools
+ws/devel
+ws/logs
+ws/build
+ws/src
+ws/.catkin_tools
 .ros_docker
 ws/.catkin_tools

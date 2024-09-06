@@ -96,6 +96,9 @@ RUN sudo apt-get install -y \
   ros-jazzy-nmea-navsat-driver \
   ros-jazzy-teleop-twist-joy \
   ros-jazzy-navigation2 \
+  ros-jazzy-nav2-bringup \
+  ros-jazzy-ros2-control \
+  ros-jazzy-ros2-controllers \
   ros-jazzy-gtsam \
   ros-jazzy-pcl-ros \
   ros-jazzy-octomap \
@@ -201,16 +204,17 @@ RUN echo 'export PS1="\[$(tput setaf 2; tput bold)\]\u\[$(tput setaf 7)\]@\[$(tp
 # Source ROS repositories
 RUN /bin/sh -c 'echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc' 
 
-# Copy the dcist_ws environment and build it
-COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
-RUN cd ~/dcist_ws \
-  && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release \
-  && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc'
-
 # Fix permissions of mounted folders
 RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/dcist_ws >> ~/.bashrc'
 # RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/data >> ~/.bashrc'
 RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/.ros >> ~/.bashrc'
+
+# Copy the dcist_ws environment and build it
+COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
+RUN cd ~/dcist_ws \
+  && /bin/bash -c "source /opt/ros/jazzy/setup.bash \
+  && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
+  && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc'
 
 # install micro-ROS
 RUN cd ~ \
