@@ -11,3 +11,6 @@
 [submodule "ws/src/vision_opencv"]
 	path = ws/src/vision_opencv
 	url = https://github.com/ros-perception/vision_opencv.git
+[submodule "ws/src/clearpath_msgs"]
+	path = ws/src/clearpath_msgs
+	url = https://github.com/clearpathrobotics/clearpath_msgs.git
