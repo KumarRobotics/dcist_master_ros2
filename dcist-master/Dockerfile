@@ -228,4 +228,4 @@ RUN cd ~ \
     cd ~/microros_ws && \
     colcon build"
 
-RUN /bin/sh -c 'echo "source ~/microros_ws/install/local_setup.bash'
+RUN /bin/sh -c 'echo "source ~/microros_ws/install/local_setup.bash" >> ~/.bashrc'
