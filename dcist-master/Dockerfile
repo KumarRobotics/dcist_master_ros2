@@ -231,6 +231,7 @@ COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
 RUN cd ~/dcist_ws \
   && /bin/bash -c "source /opt/ros/jazzy/setup.bash &&\
     source ~/microros_ws/install/setup.bash && \
+    rosdep update && \
     rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
   && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc'
