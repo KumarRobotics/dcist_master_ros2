@@ -39,10 +39,9 @@ IMG="kumarrobotics/$(basename $1)"
 
 # Get the current folder for the docker run command
 CURR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-USER_WS="$CURR_DIR/user_ws"
+USER_WS="$CURR_DIR/ws"
 DATA_DIR="$CURR_DIR/data"
 ROS_DIR="$CURR_DIR/.ros_docker"
-TMUX_CONF="$CURR_DIR/tmux.conf"
 BASHRC_HOST="$CURR_DIR/bashrc"
 
 # Make sure processes in the container can connect to the x server
@@ -63,7 +62,6 @@ echo -e "\033[1;35mRUNNING DOCKER IMAGE: $1\033[0m"
 echo -e "\033[1;35mUSER WORKSPACE: \033[0m$USER_WS"
 echo -e "\033[1;35mDATA DIR: \033[0m$DATA_DIR"
 echo -e "\033[1;35mROS DIR: \033[0m$ROS_DIR"
-echo -e "\033[1;35mTMUX CONF: \033[0m$TMUX_CONF"
 echo -e "\033[1;35mBASHRC_HOST: \033[0m$BASHRC_HOST"
 
 # Mount extra volumes if needed.
@@ -84,10 +82,9 @@ docker run --gpus all \
   -h dcist \
   --add-host dcist:127.0.0.1 \
   --add-host dcist:192.168.8.100 \
-  -v "$USER_WS:/home/dcist/user_ws" \
+  -v "$USER_WS:/home/dcist/dcist_ws" \
   -v "$DATA_DIR:/home/dcist/data" \
   -v "$ROS_DIR:/home/dcist/.ros" \
-  -v "$TMUX_CONF:/home/dcist/.tmux.conf" \
   -v "$BASHRC_HOST:/home/dcist/.bashrc_host" \
   --rm \
   --security-opt seccomp=unconfined \
