@@ -83,6 +83,7 @@ RUN sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.ke
   && sudo apt-get install -y \
   ros-dev-tools \
   python3-rosdep \
+  python3-vcstool \
   ros-jazzy-desktop
 
 RUN sudo rosdep init \
@@ -105,25 +106,26 @@ RUN sudo apt-get install -y \
   ros-jazzy-octomap-msgs \
   ros-jazzy-vision-msgs \
   ros-jazzy-mavros \
-  ros-jazzy-mavros-msgs 
+  ros-jazzy-mavros-msgs \
+  ros-jazzy-imu-tools 
 
 # Install geographiclib_datasets required by mavros
-RUN cd /opt/ros/jazzy/lib/mavros/ && sudo ./install_geographiclib_datasets.sh
+# RUN cd /opt/ros/jazzy/lib/mavros/ && sudo ./install_geographiclib_datasets.sh
 
 # Install pytorch for the appropriate architecture
-RUN if [ "$BARE_OR_NVDA" = "nvda" ] ; then \
-  if [ "$ARCHITECTURE" = "x86_64" ] ; then \
-    echo "nvda - x86_64"; sudo pip3 install --break-system-packages torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cpu ; \
-    else \
-    echo "nvda - arm64" ; echo "Skipping pytorch installation for Jetson"; \
-  fi; \
-else \
-  if [ "$ARCHITECTURE" = "amd64" ] ; then \
-    echo "bare - x86_64"; sudo pip3 install --break-system-packages torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cpu ; \
-  else \
-    echo "Architecture not supported"; exit 1; \
-  fi; \
-fi;
+# RUN if [ "$BARE_OR_NVDA" = "nvda" ] ; then \
+#   if [ "$ARCHITECTURE" = "x86_64" ] ; then \
+#     echo "nvda - x86_64"; sudo pip3 install --break-system-packages torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cpu ; \
+#     else \
+#     echo "nvda - arm64" ; echo "Skipping pytorch installation for Jetson"; \
+#   fi; \
+# else \
+#   if [ "$ARCHITECTURE" = "amd64" ] ; then \
+#     echo "bare - x86_64"; sudo pip3 install --break-system-packages torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cpu ; \
+#   else \
+#     echo "Architecture not supported"; exit 1; \
+#   fi; \
+# fi;
 
 # Install dependencies for MOCHA
 RUN sudo apt-get install -y \
@@ -134,44 +136,44 @@ RUN sudo apt-get install -y \
 
 # Install all dependencies for ROFL. Based on the ROFL build action
 # https://github.com/versatran01/rofl-beta/blob/main/.github/workflows/build.yaml
-RUN mkdir -p ~/cpp_deps
-RUN cd ~/cpp_deps \
-  && git clone --depth 1 --branch v0.6.0 https://github.com/google/glog.git \
-  && cd glog \
-  && cmake -S . -B build -G "Unix Makefiles" -DCMAKE_CXX_STANDARD=17 \
-  && cmake --build build \
-  && sudo cmake --build build --target install
-RUN cd ~/cpp_deps \
-  && git clone --depth 1 --branch 8.1.0 https://github.com/fmtlib/fmt.git \
-  && cd fmt && cmake -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DCMAKE_CXX_STANDARD=17 -DFMT_TEST=False \
-  && sudo make install
-RUN cd ~/cpp_deps \
-  && git clone --depth 1 --branch 20220623.0 https://github.com/abseil/abseil-cpp.git \
-  && cd abseil-cpp \
-  && mkdir build \
-  && cd build \
-  && cmake -DABSL_BUILD_TESTING=OFF -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_POSITION_INDEPENDENT_CODE=ON .. \
-  && sudo sudo cmake --build . --target install
-RUN cd ~/cpp_deps \
-  && git clone https://github.com/strasdat/Sophus.git \
-  && cd Sophus \
-  && git checkout 785fef3 \
-  && mkdir build \
-  && cd build \
-  && cmake -DBUILD_SOPHUS_TESTS=OFF -DBUILD_SOPHUS_EXAMPLES=OFF -DCMAKE_CXX_STANDARD=17 .. \
-  && sudo make install -j8
-RUN cd ~/cpp_deps \
-  && git clone https://github.com/google/benchmark.git \
-  && cd benchmark && cmake -E make_directory "build" \
-  && cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ \
-  && sudo cmake --build "build" --config Release --target install
-RUN cd ~/cpp_deps \
-  && git clone --recursive https://github.com/stevenlovegrove/Pangolin.git \
-  && cd Pangolin \
-  && git checkout v0.9.1 \
-  && sudo apt install -y $(./scripts/install_prerequisites.sh required --list) \
-  && cmake -B build \
-  && sudo cmake --build build --config Release --target install
+# RUN mkdir -p ~/cpp_deps
+# RUN cd ~/cpp_deps \
+#   && git clone --depth 1 --branch v0.6.0 https://github.com/google/glog.git \
+#   && cd glog \
+#   && cmake -S . -B build -G "Unix Makefiles" -DCMAKE_CXX_STANDARD=17 \
+#   && cmake --build build \
+#   && sudo cmake --build build --target install
+# RUN cd ~/cpp_deps \
+#   && git clone --depth 1 --branch 8.1.0 https://github.com/fmtlib/fmt.git \
+#   && cd fmt && cmake -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DCMAKE_CXX_STANDARD=17 -DFMT_TEST=False \
+#   && sudo make install
+# RUN cd ~/cpp_deps \
+#   && git clone --depth 1 --branch 20220623.0 https://github.com/abseil/abseil-cpp.git \
+#   && cd abseil-cpp \
+#   && mkdir build \
+#   && cd build \
+#   && cmake -DABSL_BUILD_TESTING=OFF -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_POSITION_INDEPENDENT_CODE=ON .. \
+#   && sudo sudo cmake --build . --target install
+# RUN cd ~/cpp_deps \
+#   && git clone https://github.com/strasdat/Sophus.git \
+#   && cd Sophus \
+#   && git checkout 785fef3 \
+#   && mkdir build \
+#   && cd build \
+#   && cmake -DBUILD_SOPHUS_TESTS=OFF -DBUILD_SOPHUS_EXAMPLES=OFF -DCMAKE_CXX_STANDARD=17 .. \
+#   && sudo make install -j8
+# RUN cd ~/cpp_deps \
+#   && git clone https://github.com/google/benchmark.git \
+#   && cd benchmark && cmake -E make_directory "build" \
+#   && cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ \
+#   && sudo cmake --build "build" --config Release --target install
+# RUN cd ~/cpp_deps \
+#   && git clone --recursive https://github.com/stevenlovegrove/Pangolin.git \
+#   && cd Pangolin \
+#   && git checkout v0.9.1 \
+#   && sudo apt install -y $(./scripts/install_prerequisites.sh required --list) \
+#   && cmake -B build \
+#   && sudo cmake --build build --config Release --target install
 
 # Build Ian's ORBSLAM3 version with a few patches (thanks Varun) - Currently has build issues
 # RUN mkdir ~/Repos && cd ~/Repos \
@@ -193,7 +195,7 @@ RUN cd ~/cpp_deps \
 
 # Clone all the gazebo models so that you don't download them every time
 # docker is run
-RUN mkdir -p /home/$USER/.gazebo && git clone https://github.com/osrf/gazebo_models /home/$USER/.gazebo/models
+# RUN mkdir -p /home/$USER/.gazebo && git clone https://github.com/osrf/gazebo_models /home/$USER/.gazebo/models
 
 # When running a container start in the developer's home folder
 WORKDIR /home/$USER
@@ -209,14 +211,7 @@ RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/dcist_ws >> ~/.bashrc'
 # RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/data >> ~/.bashrc'
 RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/.ros >> ~/.bashrc'
 
-# Copy the dcist_ws environment and build it
-COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
-RUN cd ~/dcist_ws \
-  && /bin/bash -c "source /opt/ros/jazzy/setup.bash \
-  && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
-  && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc'
-
-# install micro-ROS
+# install micro-ROS setup, create a micro-ROS agent
 RUN cd ~ \
   && mkdir microros_ws \
   && cd microros_ws \
@@ -225,7 +220,17 @@ RUN cd ~ \
   && rosdep update \
   && rosdep install --from-paths src --ignore-src -y \
   && /bin/bash -c "source /opt/ros/jazzy/setup.bash && \
-    cd ~/microros_ws && \
-    colcon build"
+    colcon build  && \
+    source install/setup.bash && \
+    ros2 run micro_ros_setup create_agent_ws.sh && \
+    ros2 run micro_ros_setup build_agent.sh"
+RUN /bin/sh -c 'echo "source ~/microros_ws/install/setup.bash" >> ~/.bashrc'
 
-RUN /bin/sh -c 'echo "source ~/microros_ws/install/local_setup.bash" >> ~/.bashrc'
+# Copy the dcist_ws environment and build it
+COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
+RUN cd ~/dcist_ws \
+  && /bin/bash -c "source /opt/ros/jazzy/setup.bash &&\
+    source ~/microros_ws/install/setup.bash && \
+    rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
+  && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc'
