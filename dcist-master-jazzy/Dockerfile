@@ -238,7 +238,7 @@ RUN cd ~/dcist_ws \
     rosdep update && \
     rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
-  && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc' \
-  && /bin/sh -c 'echo "export ROS_DOMAIN_ID=1" >> ~/.bashrc' 
+  && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc' 
+  # && /bin/sh -c 'echo "export ROS_DOMAIN_ID=1" >> ~/.bashrc' 
   # && /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc' \
   # && /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> ~/.bashrc' \
