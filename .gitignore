@@ -1,6 +1,7 @@
 ws/devel
-ws/logs
+ws/log
 ws/build
+ws/install
 ws/.catkin_tools
 .ros_docker
 ws/.catkin_tools

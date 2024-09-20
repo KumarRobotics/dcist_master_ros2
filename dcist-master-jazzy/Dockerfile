@@ -92,7 +92,8 @@ RUN sudo rosdep init \
 RUN rosdep update
 
 # Install ROS dependencies
-RUN sudo apt-get install -y \
+RUN sudo apt-get update \
+  && sudo apt-get install -y \
   ros-jazzy-nmea-msgs \
   ros-jazzy-nmea-navsat-driver \
   ros-jazzy-teleop-twist-joy \
@@ -107,7 +108,9 @@ RUN sudo apt-get install -y \
   ros-jazzy-vision-msgs \
   ros-jazzy-mavros \
   ros-jazzy-mavros-msgs \
-  ros-jazzy-imu-tools 
+  ros-jazzy-imu-tools \
+  ros-jazzy-rmw-cyclonedds-cpp \
+  ros-jazzy-rmw-fastrtps-cpp
 
 # Install geographiclib_datasets required by mavros
 # RUN cd /opt/ros/jazzy/lib/mavros/ && sudo ./install_geographiclib_datasets.sh
@@ -235,4 +238,7 @@ RUN cd ~/dcist_ws \
     rosdep update && \
     rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
-  && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc'
+  && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc' \
+  && /bin/sh -c 'echo "export ROS_DOMAIN_ID=1" >> ~/.bashrc' 
+  # && /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc' \
+  # && /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> ~/.bashrc' \
