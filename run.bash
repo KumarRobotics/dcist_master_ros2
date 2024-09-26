@@ -67,6 +67,9 @@ echo -e "\033[1;35mDATA DIR: \033[0m$DATA_DIR"
 echo -e "\033[1;35mROS DIR: \033[0m$ROS_DIR"
 echo -e "\033[1;35mBASHRC_HOST: \033[0m$BASHRC_HOST"
 
+# get GID of input group
+INPUT_GID=$(getent group input | cut -d: -f3)
+
 # Mount extra volumes if needed.
 docker run --gpus all \
   -u 1000 \
@@ -92,5 +95,5 @@ docker run --gpus all \
   --rm \
   --security-opt seccomp=unconfined \
   --group-add=dialout \
-  --group-add 107 \
+  --group-add $INPUT_GID \
   "$IMG"
