@@ -44,6 +44,9 @@ DATA_DIR="$CURR_DIR/data"
 ROS_DIR="$CURR_DIR/.ros_docker"
 BASHRC_HOST="$CURR_DIR/bashrc"
 
+# Get the GID of the input group and add the user to the group with that GID
+# INPUT_GID=$(getent group input | cut -d: -f3)
+
 # Make sure processes in the container can connect to the x server
 XAUTH=/tmp/.docker.xauth
 if [ ! -f $XAUTH ]
@@ -89,4 +92,5 @@ docker run --gpus all \
   --rm \
   --security-opt seccomp=unconfined \
   --group-add=dialout \
+  --group-add 107 \
   "$IMG"
