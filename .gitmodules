@@ -16,17 +16,20 @@
 	url = https://github.com/clearpathrobotics/clearpath_msgs.git
 [submodule "ws/src/robot_upstart"]
 	path = ws/src/robot_upstart
-	url = git@github.com:clearpathrobotics/robot_upstart.git
+	url = https://github.com/clearpathrobotics/robot_upstart.git
 	branch = foxy-devel
 [submodule "ws/src/twist_mux"]
 	path = ws/src/twist_mux
-	url = git@github.com:ros-teleop/twist_mux.git
+	url = https://github.com/ros-teleop/twist_mux.git
 	branch = humble
 [submodule "ws/src/wireless"]
 	path = ws/src/wireless
-	url = git@github.com:clearpathrobotics/wireless.git
+	url = https://github.com/clearpathrobotics/wireless.git
 	branch = humble-devel
 [submodule "ws/src/interactive_marker_twist_server"]
 	path = ws/src/interactive_marker_twist_server
-	url = git@github.com:ros-visualization/interactive_marker_twist_server.git
+	url = https://github.com/ros-visualization/interactive_marker_twist_server.git
 	branch = humble-devel
+[submodule "ws/src/twist_stamper"]
+	path = ws/src/twist_stamper
+	url = https://github.com/joshnewans/twist_stamper.git
