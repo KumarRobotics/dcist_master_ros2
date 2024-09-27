@@ -112,6 +112,12 @@ RUN sudo apt-get update \
   ros-jazzy-rmw-cyclonedds-cpp \
   ros-jazzy-rmw-fastrtps-cpp
 
+# Install librealsense and realsense libraries
+RUN sudo apt-get update \
+  && sudo apt-get install -y \
+  ros-jazzy-librealsense2* \
+  ros-jazzy-realsense*
+
 # Install geographiclib_datasets required by mavros
 # RUN cd /opt/ros/jazzy/lib/mavros/ && sudo ./install_geographiclib_datasets.sh
 
