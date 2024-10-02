@@ -33,3 +33,7 @@
 [submodule "ws/src/twist_stamper"]
 	path = ws/src/twist_stamper
 	url = https://github.com/joshnewans/twist_stamper.git
+[submodule "ws/src/ouster-ros"]
+	path = ws/src/ouster-ros
+	url = https://github.com/ouster-lidar/ouster-ros.git
+	branch = ros2
