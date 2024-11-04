@@ -30,6 +30,7 @@ RUN apt-get update \
   libgoogle-glog-dev \
   libspnav-dev \
   libusb-dev \
+  libpcl-dev \
   lsb-release \
   mercurial \
   python3-dbg \
@@ -235,16 +236,28 @@ RUN cd ~ \
     ros2 run micro_ros_setup build_agent.sh"
 RUN /bin/sh -c 'echo "source ~/microros_ws/install/setup.bash" >> ~/.bashrc'
 
+# install Livox-SDK2 for Ubuntu 22.04
+RUN cd ~ \
+  && git clone https://github.com/StarpathRobotics/Livox-SDK2.git \
+  && cd Livox-SDK2 \
+  && mkdir build \
+  && cd build \
+  && cmake .. \
+  && make -j \
+  && sudo make install
+
 # Copy the dcist_ws environment and build it
 COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
-RUN cd ~/dcist_ws \
-  && /bin/bash -c "source /opt/ros/jazzy/setup.bash &&\
-    source ~/microros_ws/install/setup.bash && \
-    sudo apt update &&\
-    rosdep update && \
-    rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
-  && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc' 
+# RUN cd ~/dcist_ws \
+#   && /bin/bash -c "source /opt/ros/jazzy/setup.bash &&\
+#     source ~/microros_ws/install/setup.bash && \
+#     sudo apt update &&\
+#     rosdep update && \
+#     rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
+#     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
+#   && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc' \
+#   && /bin/sh -c 'echo "ROS_DOAMIN_ID=5" >> ~/.bashrc'
   # && /bin/sh -c 'echo "export ROS_DOMAIN_ID=1" >> ~/.bashrc' 
   # && /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc' \
   # && /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> ~/.bashrc' \
+
