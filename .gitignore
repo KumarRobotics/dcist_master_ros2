@@ -5,4 +5,3 @@ ws/install
 ws/.catkin_tools
 .ros_docker/
 .vscode/
-ws/.catkin_tools
