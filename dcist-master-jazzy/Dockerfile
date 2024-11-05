@@ -236,7 +236,7 @@ RUN cd ~ \
     ros2 run micro_ros_setup build_agent.sh"
 RUN /bin/sh -c 'echo "source ~/microros_ws/install/setup.bash" >> ~/.bashrc'
 
-# install Livox-SDK2 for Ubuntu 22.04
+# install Livox-SDK2 for Ubuntu 24.04
 RUN cd ~ \
   && git clone https://github.com/StarpathRobotics/Livox-SDK2.git \
   && cd Livox-SDK2 \
@@ -248,6 +248,14 @@ RUN cd ~ \
 
 # Copy the dcist_ws environment and build it
 COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
+
+# clone livox_ros_driver2, build, and COLCON_IGNORE it
+RUN cd ~/dcist_ws/src \
+  && git clone https://github.com/Livox-SDK/livox_ros_driver2.git ws_livox/src/livox_ros_driver2 \
+  && cd ws_livox/src/livox_ros_driver2 \
+  && /bin/sh -c './build.sh humble'
+RUN /bin/sh -c 'echo "source ~/dcist_ws/src/ws_livox/install/setup.bash" >> ~/.bashrc'
+
 # RUN cd ~/dcist_ws \
 #   && /bin/bash -c "source /opt/ros/jazzy/setup.bash &&\
 #     source ~/microros_ws/install/setup.bash && \
