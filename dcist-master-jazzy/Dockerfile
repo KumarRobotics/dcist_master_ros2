@@ -256,7 +256,7 @@ RUN cd /home/dcist/dcist_ws/src \
   && /bin/sh -c './build.sh humble' \
   && touch /home/dcist/dcist_ws/cloning_successful.txt \
   && cd /home/dcist/dcist_ws/src/ws_livox \
-  && touch COLCON_IGNORE \
+  && touch COLCON_IGNORE 
 RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash" >> ~/.bashrc'
 
 RUN cd /home/dcist/dcist_ws \
@@ -266,7 +266,7 @@ RUN cd /home/dcist/dcist_ws \
     sudo apt update && \
     rosdep update && \
     rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" 
 RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/install/setup.bash" >> ~/.bashrc'
 # RUN /bin/sh -c 'echo "ROS_DOAMIN_ID=5" >> ~/.bashrc'
 # RUN /bin/sh -c 'echo "export ROS_DOMAIN_ID=1" >> ~/.bashrc' 
