@@ -233,7 +233,7 @@ RUN cd /home/dcist \
     colcon build  && \
     source install/setup.bash && \
     ros2 run micro_ros_setup create_agent_ws.sh && \
-    ros2 run micro_ros_setup build_agent.sh" \
+    ros2 run micro_ros_setup build_agent.sh" 
 RUN /bin/sh -c 'echo "source /home/dcist/microros_ws/install/setup.bash" >> ~/.bashrc'
 
 # install Livox-SDK2 for Ubuntu 24.04
