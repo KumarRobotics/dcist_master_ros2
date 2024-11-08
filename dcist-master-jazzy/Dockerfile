@@ -222,7 +222,7 @@ RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/dcist_ws >> ~/.bashrc'
 RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/.ros >> ~/.bashrc'
 
 # install micro-ROS setup, create a micro-ROS agent
-RUN cd ~ \
+RUN cd /home/dcist \
   && mkdir microros_ws \
   && cd microros_ws \
   && git clone -b jazzy https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup \
@@ -233,11 +233,11 @@ RUN cd ~ \
     colcon build  && \
     source install/setup.bash && \
     ros2 run micro_ros_setup create_agent_ws.sh && \
-    ros2 run micro_ros_setup build_agent.sh"
-RUN /bin/sh -c 'echo "source ~/microros_ws/install/setup.bash" >> ~/.bashrc'
+    ros2 run micro_ros_setup build_agent.sh" \
+RUN /bin/sh -c 'echo "source /home/dcist/microros_ws/install/setup.bash" >> ~/.bashrc'
 
 # install Livox-SDK2 for Ubuntu 24.04
-RUN cd ~ \
+RUN cd /home/dcist \
   && git clone https://github.com/StarpathRobotics/Livox-SDK2.git \
   && cd Livox-SDK2 \
   && mkdir build \
@@ -250,22 +250,26 @@ RUN cd ~ \
 COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
 
 # clone livox_ros_driver2, build, and COLCON_IGNORE it
-RUN cd ~/dcist_ws/src \
+RUN cd /home/dcist/dcist_ws/src \
   && git clone https://github.com/Livox-SDK/livox_ros_driver2.git ws_livox/src/livox_ros_driver2 \
   && cd ws_livox/src/livox_ros_driver2 \
-  && /bin/sh -c './build.sh humble'
-RUN /bin/sh -c 'echo "source ~/dcist_ws/src/ws_livox/install/setup.bash" >> ~/.bashrc'
+  && /bin/sh -c './build.sh humble' \
+  && touch /home/dcist/dcist_ws/cloning_successful.txt \
+  && cd /home/dcist/dcist_ws/src/ws_livox \
+  && touch COLCON_IGNORE \
+RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash" >> ~/.bashrc'
 
-# RUN cd ~/dcist_ws \
-#   && /bin/bash -c "source /opt/ros/jazzy/setup.bash &&\
-#     source ~/microros_ws/install/setup.bash && \
-#     sudo apt update &&\
-#     rosdep update && \
-#     rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
-#     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
-#   && /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc' \
-#   && /bin/sh -c 'echo "ROS_DOAMIN_ID=5" >> ~/.bashrc'
-  # && /bin/sh -c 'echo "export ROS_DOMAIN_ID=1" >> ~/.bashrc' 
-  # && /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc' \
-  # && /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> ~/.bashrc' \
+RUN cd /home/dcist/dcist_ws \
+  && /bin/bash -c "source /opt/ros/jazzy/setup.bash && \
+    source /home/dcist/microros_ws/install/setup.bash && \
+    source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash && \
+    sudo apt update && \
+    rosdep update && \
+    rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" \
+RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/install/setup.bash" >> ~/.bashrc'
+# RUN /bin/sh -c 'echo "ROS_DOAMIN_ID=5" >> ~/.bashrc'
+# RUN /bin/sh -c 'echo "export ROS_DOMAIN_ID=1" >> ~/.bashrc' 
+# RUN /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc' 
+# RUN /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> ~/.bashrc' 
 
