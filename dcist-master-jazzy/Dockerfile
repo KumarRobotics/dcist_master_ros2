@@ -48,6 +48,7 @@ RUN apt-get update \
   iputils-ping \
   default-jre \
   iproute2 \
+  zstd \
   && apt-get clean
 
 # Install a good neovim version
@@ -70,6 +71,9 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=n_US:en
+
+# enable all nvidia capabilities
+ENV NVIDIA_DRIVER_CAPABILITIES=all
 
 # Commands below run as the developer user
 USER $USER
@@ -112,12 +116,6 @@ RUN sudo apt-get update \
   ros-jazzy-imu-tools \
   ros-jazzy-rmw-cyclonedds-cpp \
   ros-jazzy-rmw-fastrtps-cpp
-
-# Install librealsense and realsense libraries
-RUN sudo apt-get update \
-  && sudo apt-get install -y \
-  ros-jazzy-librealsense2* \
-  ros-jazzy-realsense*
 
 # Install geographiclib_datasets required by mavros
 # RUN cd /opt/ros/jazzy/lib/mavros/ && sudo ./install_geographiclib_datasets.sh
