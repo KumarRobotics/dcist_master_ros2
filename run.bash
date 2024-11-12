@@ -88,7 +88,6 @@ docker run --gpus all \
   -h dcist \
   --add-host dcist:127.0.0.1 \
   --add-host dcist:192.168.8.100 \
-  -v "$USER_WS:/home/dcist/dcist_ws" \
   -v "$DATA_DIR:/home/dcist/data" \
   -v "$ROS_DIR:/home/dcist/.ros" \
   -v "$BASHRC_HOST:/home/dcist/.bashrc_host" \
