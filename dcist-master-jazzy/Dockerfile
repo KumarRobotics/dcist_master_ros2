@@ -244,27 +244,30 @@ RUN cd /home/dcist \
   && make -j \
   && sudo make install
 
-# Copy the dcist_ws environment and build it
+# Copy the dcist_ws environment
 COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
 
 # clone livox_ros_driver2, build, and COLCON_IGNORE it
-# RUN cd /home/dcist/dcist_ws/src \
-#   && git clone https://github.com/Livox-SDK/livox_ros_driver2.git ws_livox/src/livox_ros_driver2 \
-#   && cd ws_livox/src/livox_ros_driver2 \
-#   && /bin/sh -c './build.sh humble' \
-#   && cd /home/dcist/dcist_ws/src/ws_livox \
-#   && touch COLCON_IGNORE 
-# RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash" >> ~/.bashrc'
-
-# RUN cd /home/dcist/dcist_ws \
-#   && /bin/bash -c "source /opt/ros/jazzy/setup.bash && \
-#     source /home/dcist/microros_ws/install/setup.bash && \
-#     source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash && \
-#     sudo apt update && \
-#     rosdep update && \
-#     rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
-#     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" 
-# RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/install/setup.bash" >> ~/.bashrc'
+RUN cd /home/dcist/dcist_ws/src \
+  && /bin/bash -c "source /opt/ros/jazzy/setup.bash && \
+    git clone https://github.com/Livox-SDK/livox_ros_driver2.git ws_livox/src/livox_ros_driver2 && \
+    cd ws_livox/src/livox_ros_driver2 && \
+    ./build.sh humble && \
+    cd /home/dcist/dcist_ws/src/ws_livox && \
+    touch COLCON_IGNORE"
+    
+# build the dcist_ws
+RUN cd /home/dcist/dcist_ws \
+  && /bin/bash -c "source /opt/ros/jazzy/setup.bash && \
+    source /home/dcist/microros_ws/install/setup.bash && \
+    source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash && \
+    sudo apt update && \
+    rosdep update && \
+    rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" 
+    
+RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash" >> ~/.bashrc'
+RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/install/setup.bash" >> ~/.bashrc'
 # RUN /bin/sh -c 'echo "ROS_DOAMIN_ID=5" >> ~/.bashrc'
 # RUN /bin/sh -c 'echo "export ROS_DOMAIN_ID=1" >> ~/.bashrc' 
 # RUN /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc' 
