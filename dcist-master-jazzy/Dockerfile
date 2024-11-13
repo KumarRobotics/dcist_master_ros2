@@ -74,6 +74,7 @@ ENV LANGUAGE=n_US:en
 
 # enable all nvidia capabilities
 ENV NVIDIA_DRIVER_CAPABILITIES=all
+ENV NVIDIA_VISIBLE_DEVICES=all
 
 # Commands below run as the developer user
 USER $USER
@@ -255,16 +256,27 @@ RUN cd /home/dcist/dcist_ws/src \
     ./build.sh humble && \
     cd /home/dcist/dcist_ws/src/ws_livox && \
     touch COLCON_IGNORE"
-    
+
+# download and install the ZED SDK
+RUN cd /home/dcist \
+  && wget -O zed_sdk.run https://download.stereolabs.com/zedsdk/4.2/cu12/ubuntu22?_gl=1*mdjmft*_gcl_au*MTI2NTI5NjkuMTczMTQ0NTcwNQ.. \
+  && chmod +x zed_sdk.run \
+  && ./zed_sdk.run -- silent skip_python \
+  && rm zed_sdk.run
+
+# install the ZED ROS2 wrapper
+RUN cd /home/dcist/dcist_ws/src/ \
+  && git clone --recursive https://github.com/frankgon1627/zed-ros2-wrapper.git
+
 # build the dcist_ws
-RUN cd /home/dcist/dcist_ws \
-  && /bin/bash -c "source /opt/ros/jazzy/setup.bash && \
-    source /home/dcist/microros_ws/install/setup.bash && \
-    source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash && \
-    sudo apt update && \
-    rosdep update && \
-    rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" 
+# RUN cd /home/dcist/dcist_ws \
+#   && /bin/bash -c "source /opt/ros/jazzy/setup.bash && \
+#     source /home/dcist/microros_ws/install/setup.bash && \
+#     source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash && \
+#     sudo apt update && \
+#     rosdep update && \
+#     rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
+#     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" 
     
 RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash" >> ~/.bashrc'
 RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/install/setup.bash" >> ~/.bashrc'
