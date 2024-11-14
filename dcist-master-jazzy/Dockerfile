@@ -269,14 +269,14 @@ RUN cd /home/dcist/dcist_ws/src/ \
   && git clone --recursive https://github.com/frankgon1627/zed-ros2-wrapper.git
 
 # build the dcist_ws
-# RUN cd /home/dcist/dcist_ws \
-#   && /bin/bash -c "source /opt/ros/jazzy/setup.bash && \
-#     source /home/dcist/microros_ws/install/setup.bash && \
-#     source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash && \
-#     sudo apt update && \
-#     rosdep update && \
-#     rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
-#     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" 
+RUN cd /home/dcist/dcist_ws \
+  && /bin/bash -c "source /opt/ros/jazzy/setup.bash && \
+    source /home/dcist/microros_ws/install/setup.bash && \
+    source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash && \
+    sudo apt update && \
+    rosdep update && \
+    rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release" 
     
 RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash" >> ~/.bashrc'
 RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/install/setup.bash" >> ~/.bashrc'
