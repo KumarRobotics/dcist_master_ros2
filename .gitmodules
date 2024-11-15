@@ -26,10 +26,6 @@
 	path = ws/src/wireless
 	url = https://github.com/clearpathrobotics/wireless.git
 	branch = humble-devel
-[submodule "ws/src/interactive_marker_twist_server"]
-	path = ws/src/interactive_marker_twist_server
-	url = https://github.com/ros-visualization/interactive_marker_twist_server.git
-	branch = humble-devel
 [submodule "ws/src/twist_stamper"]
 	path = ws/src/twist_stamper
 	url = https://github.com/joshnewans/twist_stamper.git
