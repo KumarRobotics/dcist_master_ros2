@@ -39,6 +39,6 @@ ros2 run twist_stamper twist_stamper --ros-args -r  cmd_vel_in:=/jackal_velocity
 To launch the camera and LIDAR, use the following commands:
 
 ```
-ros2 launch realsense2_camera rs_launch.py depth_module.depth_profile:=1280x720x30 pointcloud.enable:=true
+ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed
 ros2 launch ouster_ros sensor.launch.xml sensor_hostname:=192.168.100.12 udp_dest:=192.168.100.1 viz:=false
 ```
