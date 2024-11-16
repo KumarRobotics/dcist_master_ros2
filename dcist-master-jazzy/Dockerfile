@@ -102,6 +102,7 @@ RUN sudo apt-get update \
   ros-jazzy-nmea-msgs \
   ros-jazzy-nmea-navsat-driver \
   ros-jazzy-teleop-twist-joy \
+  ros-jazzy-twist-stamper \
   ros-jazzy-navigation2 \
   ros-jazzy-nav2-bringup \
   ros-jazzy-ros2-control \
