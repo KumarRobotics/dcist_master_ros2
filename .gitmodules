@@ -33,3 +33,6 @@
 [submodule "ws/src/FAST_LIO2"]
 	path = ws/src/FAST_LIO2
 	url = https://github.com/frankgon1627/FAST_LIO2.git
+[submodule "ws/src/Faster-LIO-ROS2"]
+	path = ws/src/Faster-LIO-ROS2
+	url = https://github.com/frankgon1627/Faster-LIO-ROS2.git
