@@ -37,3 +37,4 @@
 [submodule "ws/src/Faster-LIO-ROS2"]
 	path = ws/src/Faster-LIO-ROS2
 	url = https://github.com/frankgon1627/Faster-LIO-ROS2.git
+	branch = main
