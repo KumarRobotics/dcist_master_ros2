@@ -243,7 +243,7 @@ RUN cd /home/dcist \
   && mkdir build \
   && cd build \
   && cmake .. \
-  && make -j \
+  && make -j $(nproc) \
   && sudo make install
 
 # Copy the dcist_ws environment
