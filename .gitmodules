@@ -38,3 +38,6 @@
 	path = ws/src/Faster-LIO-ROS2
 	url = https://github.com/frankgon1627/Faster-LIO-ROS2.git
 	branch = main
+[submodule "ws/src/ros2_control"]
+	path = ws/src/ros2_control
+	url = https://github.com/ros-controls/ros2_control.git
