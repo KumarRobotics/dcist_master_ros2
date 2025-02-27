@@ -281,6 +281,6 @@ RUN cd /home/dcist/dcist_ws \
     
 RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/src/ws_livox/install/setup.bash" >> ~/.bashrc'
 RUN /bin/sh -c 'echo "source /home/dcist/dcist_ws/install/setup.bash" >> ~/.bashrc'
-RUN /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc' 
+# RUN /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc' 
 # RUN /bin/sh -c 'echo "export RMW_IMPLEMENTATION=rmw_fastrtps_cpp" >> ~/.bashrc' 
 
