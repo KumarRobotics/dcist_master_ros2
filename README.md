@@ -6,7 +6,7 @@ This is the base image used for the DCIST robots at KR, for the Jackals to run R
 
 TL;DR:
  - It installs the dependencies required by many user packages (see
-   `dcist-master/Dockerfile`).
+   `dcist-master-jazzy/Dockerfile`).
  - It copies the `ws` main dcist workspace and builds it.
  - It provides helper scripts `build.bash`, `run.bash` and `join.bash`
 
