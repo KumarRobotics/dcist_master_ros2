@@ -30,14 +30,10 @@
 	path = ws/src/ouster-ros
 	url = https://github.com/KumarRobotics/ouster-ros.git
 	branch = ros2
-[submodule "ws/src/FAST_LIO2"]
-	path = ws/src/FAST_LIO2
-	url = https://github.com/frankgon1627/FAST_LIO2.git
-	branch = ROS2
-[submodule "ws/src/Faster-LIO-ROS2"]
-	path = ws/src/Faster-LIO-ROS2
-	url = https://github.com/frankgon1627/Faster-LIO-ROS2.git
-	branch = main
 [submodule "ws/src/ros2_control"]
 	path = ws/src/ros2_control
 	url = https://github.com/ros-controls/ros2_control.git
+[submodule "ws/src/DLIO"]
+	path = ws/src/DLIO
+	url = https://github.com/KumarRobotics/direct_lidar_inertial_odometry.git
+	branch = feature/ros2

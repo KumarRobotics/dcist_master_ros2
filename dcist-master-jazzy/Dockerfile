@@ -17,22 +17,29 @@ RUN apt-get update \
 
 # General dependencies for development
 RUN apt-get update \
-  && apt-get install -y \
+  && apt-get install -y --install-recommends\
   build-essential \
   cmake \
+  coinor-libipopt-dev \
   cppcheck \
-  gdb \
-  git \
-  libeigen3-dev \
+  curl \
+  dbus-x11 \
   g++ \
+  gcc \
+  gdb \
+  gfortran \
+  git \
   libbluetooth-dev \
   libcwiid-dev \
+  libeigen3-dev \
   libgoogle-glog-dev \
+  liblapack-dev \
+  libpcl-dev \
   libspnav-dev \
   libusb-dev \
-  libpcl-dev \
   lsb-release \
   mercurial \
+  pkg-config \
   python3-dbg \
   python3-empy \
   python3-pip \
@@ -40,12 +47,11 @@ RUN apt-get update \
   python3-sklearn \
   software-properties-common \
   sudo \
+  swig \
   wget \
-  curl \
   cmake-curses-gui \
   geany \
   tmux \
-  dbus-x11 \
   iputils-ping \
   default-jre \
   iproute2 \
