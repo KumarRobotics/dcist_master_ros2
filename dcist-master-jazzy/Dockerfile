@@ -272,7 +272,9 @@ RUN cd /home/dcist \
 
 # install the ZED ROS2 wrapper
 RUN cd /home/dcist/dcist_ws/src/ \
-  && git clone --recursive https://github.com/frankgon1627/zed-ros2-wrapper.git
+  && git clone --recursive https://github.com/stereolabs/zed-ros2-wrapper.git \
+  && cd zed-ros2-wrapper \
+  && git checkout jazzy
 
 # build the dcist_ws
 RUN cd /home/dcist/dcist_ws \
