@@ -37,3 +37,6 @@
 	path = ws/src/DLIO
 	url = https://github.com/KumarRobotics/direct_lidar_inertial_odometry.git
 	branch = feature/ros2
+[submodule "ws/src/safety_controller"]
+	path = ws/src/safety_controller
+	url = https://github.com/frankgon1627/safety_controller.git
