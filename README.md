@@ -29,7 +29,7 @@ To launch the base hardware (no sensors), use the following commands:
 
 ```
 ros2 launch jackal_robot bringup.launch.py
-ros2 run twist_stamper twist_stamper --ros-args -r  cmd_vel_in:=/jackal_velocity_controller/cmd_vel_unstamped -r cmd_vel_out:=/jackal_velocity_controller/cmd_vel
+ros2 run safety_controller safety_controller
 ```
 
 ### Notes on how to start the zed and ouster
@@ -37,10 +37,12 @@ To launch the camera and LIDAR, use the following commands:
 
 ```
 ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i
-ros2 launch ouster_ros sensor.launch.xml sensor_hostname:=192.168.100.12 udp_dest:=192.168.100.1 viz:=false
+ros2 launch ouster_ros sensor.composite.launch.py viz:=false
 ```
 
-To use ouster drivers with default QoS (needed for DLIO currently)
+### Notes on how to get odometry estimates
+To receive odometry, use the following commands:
+
 ```
-ros2 launch ouster_ros sensor.launch.xml sensor_hostname:=192.168.100.12 udp_dest:=192.168.100.1 viz:=false use_system_default_qos:=true
+ros2 launch direct_lidar_inertial_odometry dlio.launch.py rviz:=false
 ```
