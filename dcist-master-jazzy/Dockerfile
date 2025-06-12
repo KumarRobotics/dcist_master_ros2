@@ -133,6 +133,7 @@ RUN cd /home/dcist/dcist_ws \
 # Source setup files
 RUN /bin/sh -c 'echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc'
 RUN /bin/sh -c 'echo "source /etc/clearpath/setup.bash" >> ~/.bashrc'
+RUN /bin/sh -c 'echo "source ~/dcist_ws/install/setup.bash" >> ~/.bashrc'
 # Fix folder permissions
 RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/dcist_ws >> ~/.bashrc'
 RUN /bin/sh -c 'echo sudo chown $USER:$USER ~/data >> ~/.bashrc'
