@@ -114,6 +114,22 @@ WORKDIR /home/$USER
 # Place Clearpath launchfile in the container
 COPY --chown=$USER:$USER ../clearpath /etc/clearpath
 
+# Copy the dcist_ws environment
+COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
+
+# Initialize rosdep
+RUN sudo rosdep init \
+  && sudo apt-get clean \
+  && rosdep update
+
+# build the dcist_ws
+RUN cd /home/dcist/dcist_ws \
+  && /bin/bash -c 'source /opt/ros/jazzy/setup.bash && \
+    sudo apt update && \
+    rosdep update && \
+    rosdep install --from-paths src --ignore-src --rosdistro=jazzy -y && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs -DCMAKE_CXX_FLAGS="-Wl,--allow-shlib-undefined"'
+
 # Source setup files
 RUN /bin/sh -c 'echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc'
 RUN /bin/sh -c 'echo "source /etc/clearpath/setup.bash" >> ~/.bashrc'
