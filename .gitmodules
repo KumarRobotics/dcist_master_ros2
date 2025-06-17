@@ -1,31 +1,3 @@
-[submodule "ws/src/jackal"]
-	path = ws/src/jackal
-	url = https://github.com/KumarRobotics/jackal.git
-	branch = jackal2_jazzy
-# [submodule "ws/src/ros_numpy"]
-# 	path = ws/src/ros_numpy
-# 	url = https://github.com/eric-wieser/ros_numpy.git
-# [submodule "ws/src/ouster_example"]
-# 	path = ws/src/ouster_example
-# 	url = https://github.com/ouster-lidar/ouster_example.git
-# [submodule "ws/src/vision_opencv"]
-# 	path = ws/src/vision_opencv
-# 	url = https://github.com/ros-perception/vision_opencv.git
-[submodule "ws/src/clearpath_msgs"]
-	path = ws/src/clearpath_msgs
-	url = https://github.com/clearpathrobotics/clearpath_msgs.git
-[submodule "ws/src/robot_upstart"]
-	path = ws/src/robot_upstart
-	url = https://github.com/clearpathrobotics/robot_upstart.git
-	branch = foxy-devel
-[submodule "ws/src/twist_mux"]
-	path = ws/src/twist_mux
-	url = https://github.com/ros-teleop/twist_mux.git
-	branch = humble
-[submodule "ws/src/wireless"]
-	path = ws/src/wireless
-	url = https://github.com/clearpathrobotics/wireless.git
-	branch = humble-devel
 [submodule "ws/src/ouster-ros"]
 	path = ws/src/ouster-ros
 	url = https://github.com/KumarRobotics/ouster-ros.git
@@ -40,3 +12,6 @@
 [submodule "ws/src/safety_controller"]
 	path = ws/src/safety_controller
 	url = https://github.com/frankgon1627/safety_controller.git
+[submodule "ws/src/zed-ros2-wrapper"]
+	path = ws/src/zed-ros2-wrapper
+	url = https://github.com/KumarRobotics/zed-ros2-wrapper.git

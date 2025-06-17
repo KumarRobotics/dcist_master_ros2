@@ -28,7 +28,7 @@ cd dcist_master_ros2 && git submodule update --init --recursive
 To launch the base hardware (no sensors), use the following commands:
 
 ```
-ros2 launch jackal_robot bringup.launch.py
+ros2 launch /etc/clearpath/platform/launch/platform-service.launch.py
 ros2 run safety_controller safety_controller
 ```
 
