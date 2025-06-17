@@ -111,6 +111,13 @@ RUN wget https://packages.clearpathrobotics.com/public.key -O - | sudo apt-key a
 
 WORKDIR /home/$USER
 
+# download and install the ZED SDK
+RUN cd /home/dcist \
+  && wget -O zed_sdk.run https://download.stereolabs.com/zedsdk/5.0/cu12/ubuntu24 \
+  && chmod +x zed_sdk.run \
+  && ./zed_sdk.run -- silent skip_cuda skip_od_module\
+  && rm zed_sdk.run
+
 # Place Clearpath launchfile in the container
 COPY --chown=$USER:$USER ../clearpath /etc/clearpath
 
