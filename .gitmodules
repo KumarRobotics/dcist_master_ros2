@@ -14,4 +14,4 @@
 	url = https://github.com/frankgon1627/safety_controller.git
 [submodule "ws/src/zed-ros2-wrapper"]
 	path = ws/src/zed-ros2-wrapper
-	url = https://github.com/stereolabs/zed-ros2-wrapper.git
+	url = https://github.com/KumarRobotics/zed-ros2-wrapper.git

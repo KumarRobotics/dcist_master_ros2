@@ -115,7 +115,7 @@ WORKDIR /home/$USER
 RUN cd /home/dcist \
   && wget -O zed_sdk.run https://download.stereolabs.com/zedsdk/5.0/cu12/ubuntu24 \
   && chmod +x zed_sdk.run \
-  && ./zed_sdk.run -- silent skip_cuda skip_od_module\
+  && ./zed_sdk.run -- silent runtime_only\
   && rm zed_sdk.run
 
 # Place Clearpath launchfile in the container
