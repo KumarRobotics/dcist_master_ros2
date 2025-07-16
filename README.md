@@ -29,6 +29,7 @@ To launch the base hardware (no sensors), use the following commands:
 
 ```
 ros2 launch /etc/clearpath/platform/launch/platform-service.launch.py
+ros2 service call /platform/mcu/configure clearpath_platform_msgs/srv/ConfigureMcu "{domain_id: 0, robot_namespace: 'j100_0000'}"
 TODO: Safety controller
 ```
 
@@ -36,8 +37,8 @@ TODO: Safety controller
 To launch the camera and LIDAR, use the following commands:
 
 ```
-ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i
 ros2 launch ouster_ros sensor.composite.launch.py viz:=false
+ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i
 ```
 
 ### Notes on how to get odometry estimates
