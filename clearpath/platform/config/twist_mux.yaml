@@ -12,7 +12,7 @@ j100_0000:
           timeout: 0.5
           priority: 8
         rc:
-          topic: 'autonomous/cmd_vel'
+          topic: 'auto_mode/cmd_vel'
           timeout: 0.5
           priority: 12
         external:
