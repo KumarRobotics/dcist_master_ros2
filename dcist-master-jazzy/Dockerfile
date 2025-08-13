@@ -124,6 +124,19 @@ COPY --chown=$USER:$USER ../clearpath /etc/clearpath
 # Copy the dcist_ws environment
 COPY --chown=$USER:$USER ../ws /home/$USER/dcist_ws
 
+# Livox
+WORKDIR /home/dcist/
+RUN  git clone https://github.com/kashishkebab9/Livox-SDK2.git
+WORKDIR /home/dcist/Livox-SDK2
+RUN  mkdir build
+WORKDIR /home/dcist/Livox-SDK2/build
+RUN  cmake .. && make -j2
+RUN sudo make install
+
+WORKDIR /home/dcist/
+RUN cd dcist_ws/src/livox_ros_driver2 && \
+    ./build.sh humble
+
 # Initialize rosdep
 RUN sudo rosdep init \
   && sudo apt-get clean \
