@@ -20,3 +20,9 @@
 	path = ws/src/zed-ros2-wrapper
 	url = https://github.com/KumarRobotics/zed-ros2-wrapper.git
 
+[submodule "ws/src/Faster-LIO-ROS2"]
+	path = ws/src/Faster-LIO-ROS2
+	url = git@github.com:KumarRobotics/Faster-LIO-ROS2.git
+[submodule "ws/src/livox_ros_driver2"]
+	path = ws/src/livox_ros_driver2
+	url = https://github.com/Livox-SDK/livox_ros_driver2.git
