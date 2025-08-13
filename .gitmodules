@@ -9,6 +9,10 @@
 	path = ws/src/Faster-LIO-ROS2
 	url = https://github.com/KumarRobotics/Faster-LIO-ROS2.git
 	branch = main
+[submodule "ws/src/livox_ros_driver2"]
+	path = ws/src/livox_ros_driver2
+  url = https://github.com/Livox-SDK/livox_ros_driver2.git
+	branch = main
 [submodule "ws/src/safety_controller"]
 	path = ws/src/safety_controller
 	url = https://github.com/frankgon1627/safety_controller.git
